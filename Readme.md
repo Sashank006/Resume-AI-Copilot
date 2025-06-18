@@ -42,7 +42,7 @@ A full-stack AI-powered web app to help you generate, edit, score, and track job
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/your-username/your-repo-name.git
+git clone https://github.com/Sashank006/Resuume-AI-Copilot.git
 cd your-repo-name
 
 ## 2. Install frontend dependencies
