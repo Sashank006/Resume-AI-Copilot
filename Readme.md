@@ -44,16 +44,18 @@ A full-stack AI-powered web app to help you generate, edit, score, and track job
 ```bash
 git clone https://github.com/Sashank006/Resuume-AI-Copilot.git
 cd your-repo-name
-
+```
+```bash
 ## 2. Install frontend dependencies
 npm install
 npm start
-
+```
+```bash
 ## 3. Backend Flask
 cd backend
 pip install -r requirements.txt
 python app.py
-
+```
 
 
 🌐 Deployment Notes
@@ -66,5 +68,8 @@ Deploy frontend via Vercel/Netlify
 Deploy backend via Render/Railway
 
 Use MongoDB Atlas (already done ✅)
+
+## 🧠 Built by Sashank R.K.
+For demo or collab: [LinkedIn](https://www.linkedin.com/in/sashankreddyk) | [GitHub](https://github.com/Sashank006)
 
 
