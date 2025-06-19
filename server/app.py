@@ -7,13 +7,15 @@ import bcrypt
 from flask import request, jsonify
 from datetime import datetime , timezone
 from pymongo import UpdateOne
-client = MongoClient("mongodb+srv://JohnDoe:6Kg%214E%21Xb6pS%2576@resume-builder.kptd13c.mongodb.net/?retryWrites=true&w=majority")
+import os
+client = MongoClient(os.environ.get("MONGO_URI"))
 db = client['resumeAI']  
 users_collection = db['users']
 resumes_collection = db['resumes']
 applied_jobs_collection = db['applied_jobs']
 app = Flask(__name__)
 CORS(app)
+OLLAMA_URL = os.environ.get("OLLAMA_API_URL", "http://localhost:11434/api/chat")
 from bson.objectid import ObjectId
 from flask import send_file
 import PyPDF2
@@ -45,7 +47,7 @@ Rewrite and return only the revised resume:
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
                 "messages": [
@@ -106,7 +108,7 @@ def analyze():
     
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
 
@@ -171,7 +173,7 @@ Use professional language. Include these sections:
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
                 "messages": [
@@ -224,7 +226,7 @@ Compare the following resume and job description. Provide:
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
                 "messages": [
@@ -318,7 +320,7 @@ Resume:
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
                 "messages": [
@@ -484,7 +486,7 @@ Return only the final formatted cover letter.
 
     try:
         response = requests.post(
-            "http://localhost:11434/api/chat",
+            OLLAMA_URL,
             json={
                 "model": "mistral",
                 "messages": [
