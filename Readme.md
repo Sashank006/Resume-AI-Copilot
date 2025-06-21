@@ -70,6 +70,6 @@ Deploy backend via Render/Railway
 Use MongoDB Atlas (already done ✅)
 
 ## 🧠 Built by Sashank R.K.
-For demo or collab: [LinkedIn](https://www.linkedin.com/in/sashankreddyk) | [GitHub](https://github.com/Sashank006)
+For Contact: [LinkedIn](https://www.linkedin.com/in/sashankreddyk) | [GitHub](https://github.com/Sashank006)
 
 
