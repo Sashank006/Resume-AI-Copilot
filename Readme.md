@@ -33,7 +33,7 @@ A full-stack AI-powered web app to help you generate, edit, score, and track job
 
 **Integrations**  
 - JSearch (RapidAPI) for real-time job listings  
-- Resume match scoring simulated or AI-calculated
+- Resume match scoring AI-calculated
 
 ---
 
