@@ -1738,7 +1738,7 @@ const handleSubmitFeedback = async () => {
             <label className="block font-medium mb-1">Email:</label>
             <input
               type="email"
-              className="w-full p-2 border rounded"
+              className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
             />
