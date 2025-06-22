@@ -683,8 +683,6 @@ const handleSubmitFeedback = async () => {
                 Login
               </button>
             )}
-
-            {/* Resume Section */}
             <div className="flex flex-col items-center">
               <span className="font-semibold mb-1">Resume</span>
               <div className="flex flex-wrap gap-2 justify-center">
@@ -694,8 +692,6 @@ const handleSubmitFeedback = async () => {
                 <button onClick={() => setActiveTab('saved')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'saved' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Resumes</button>
               </div>
             </div>
-
-            {/* Job Section */}
             <div className="flex flex-col items-center">
               <span className="font-semibold mb-1">Jobs</span>
               <div className="flex flex-wrap gap-2 justify-center">
@@ -705,22 +701,16 @@ const handleSubmitFeedback = async () => {
                 <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Match</button>
               </div>
             </div>
-
-            {/* Feedback */}
             <div className="flex flex-col items-center">
               <span className="font-semibold mb-1">Other</span>
               <button onClick={() => setActiveTab('feedback')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'feedback' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Feedback</button>
             </div>
-
-            {/* Dark Mode Toggle */}
             <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
           </div>
         )}
       </div>
-    </div>
-    
       {activeTab === 'jobs' && (
         <div className=" w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-4">Job Search</h2>
@@ -1824,6 +1814,7 @@ const handleSubmitFeedback = async () => {
         </a>
       </footer>
     </div>
+   </div>
   ) 
 }
 export default App;
