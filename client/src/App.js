@@ -673,10 +673,10 @@ const handleSubmitFeedback = async () => {
 
         {activeTab !== 'home' && (
           <div className="flex flex-wrap gap-4 justify-center mb-6">
-            {activeTab !== 'login' && !userId && (
+            {!userId && (
               <button
                 onClick={() => setActiveTab('login')}
-                className={`px-4 py-2 rounded font-semibold transition ${
+                className={`px-4 py-2 rounded font-semibold transition text-xs${
                   activeTab === 'login' ? 'bg-red-600 text-white' : 'bg-gray-200 text-black dark:text-black'
                 }`}
               >
