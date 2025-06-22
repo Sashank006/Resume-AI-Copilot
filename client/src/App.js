@@ -644,12 +644,12 @@ const handleSubmitFeedback = async () => {
 };
 
   return (
-  <div className={darkMode ? 'dark' : ''}>
+    <div className={darkMode ? 'dark' : ''}>
     <Toaster position="top-right" />
-    <div className="bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
-      <div className="max-w-3xl mx-auto px-4">
-        {userId && userEmail && (
-          <>
+      <div className="bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
+       <div className="max-w-3xl mx-auto px-4">
+          {userId && userEmail && (
+            <>
             <div className="text-sm mb-4 text-right">
               Logged in as: <span className="font-semibold">{userEmail}</span>
               <button
@@ -666,36 +666,127 @@ const handleSubmitFeedback = async () => {
               </button>
             </div>
             <div className="p-3 rounded text-sm text-center mb-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold">
-              Welcome to Your AI-Powered Job Matching Platform! 🚀
-            </div>
-          </>
-        )}
-
-        {activeTab !== 'home' && (
-          <>
-            {!userId && activeTab !== 'login' && (
-              <div className="flex justify-center mb-4">
-                <button
-                  onClick={() => setActiveTab('login')}
-                  className={`px-4 py-2 rounded font-semibold transition ${
-                    activeTab === 'login'
-                      ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-black dark:text-black'
-                  }`}
-                >
-                  Login
-                </button>
+                Welcome to Your AI-Powered Job Matching Platform! 🚀
               </div>
+            </>
+          )}
+          {activeTab !== 'home' && (
+            <div className="flex gap-4 justify-center mb-6">
+            {activeTab !== 'login' && !userId && (
+              <button
+                onClick={() => setActiveTab('login')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'login'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Login
+              </button>
             )}
+            <button
+                onClick={() => setActiveTab('jobs')}
+                className={`px-4 py-2 rounded font-semibold transition text-xs ${
+                  activeTab === 'jobs'
+                    ? 'bg-indigo-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Job Search
+              </button>
+              <button
+                onClick={() => setActiveTab('applications')}
+                className={`px-4 py-2 rounded font-semibold transition text-xs ${
+                  activeTab === 'applications'
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                My Applications
+              </button>
+              <button
+                onClick={() => setActiveTab('auto-apply')}
+                className={`px-4 py-2 rounded font-semibold transition text-xs ${
+                  activeTab === 'auto-apply'
+                    ? 'bg-orange-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Auto-Apply
+              </button>
+              <button
+                onClick={() => setActiveTab('match')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'match'
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Job Match
+              </button>
+              <button
+                onClick={() => setActiveTab('analyze')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'analyze'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Analyze
+              </button>
 
-            <CategoryTabs
-              setActiveTab={setActiveTab}
-              activeTab={activeTab}
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-            />
-          </>
-        )}
+              <button
+                onClick={() => setActiveTab('generate')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'generate'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Generate
+              </button>
+
+              <button
+                onClick={() => setActiveTab('ats')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'ats'
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                ATS Score
+              </button>
+
+              <button
+                onClick={() => setActiveTab('saved')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'saved'
+                    ? 'bg-yellow-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                My Resumes
+              </button>
+              <button
+                onClick={() => setActiveTab('feedback')}
+                className={`px-4 py-2 rounded font-semibold transition ${
+                  activeTab === 'feedback'
+                    ? 'bg-pink-600 text-white'
+                    : 'bg-gray-200 text-black dark:text-black'
+                }`}
+              >
+                Feedback
+              </button>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="absolute top-4 right-4 p-2"
+              >
+                {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
 
       {activeTab === 'jobs' && (
         <div className=" w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1800,8 +1891,6 @@ const handleSubmitFeedback = async () => {
         </a>
       </footer>
     </div>
-  </div>
-</div> 
   ) 
 }
 export default App;
