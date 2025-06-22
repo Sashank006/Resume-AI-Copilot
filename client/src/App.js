@@ -5,6 +5,7 @@ import { Sun, Moon, Search, MapPin, Clock, Building, DollarSign, Send, Eye, Filt
 import { Document, Packer, Paragraph } from "docx";
 import { saveAs } from "file-saver";
 import { Toaster, toast } from 'react-hot-toast';
+import CategoryTabs from "./components/CategoryTabs";
 function App() {
   const [userId, setUserId] = useState(null); 
   const [activeTab, setActiveTab] = useState('home');
