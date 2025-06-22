@@ -731,7 +731,7 @@ const handleSubmitFeedback = async () => {
               onChange={(e) => setJobLocation(e.target.value)}
             />
             <select
-              className="p-2 border rounded w-full"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
               value={jobType}
               onChange={(e) => setJobType(e.target.value)}
             >
@@ -741,7 +741,7 @@ const handleSubmitFeedback = async () => {
               <option value="Internship">Internship</option>
             </select>
             <select
-              className="p-2 border rounded w-full"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
               value={selectedJobBoard}
               onChange={(e) => setSelectedJobBoard(e.target.value)}
             >
@@ -1196,7 +1196,7 @@ const handleSubmitFeedback = async () => {
                   type="file"
                   accept=".pdf"
                   onChange={(e) => setResumeFile(e.target.files[0])}
-                  className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
+                  className="mb-2"
                 />
                 <button
                   onClick={handleFileUpload}
