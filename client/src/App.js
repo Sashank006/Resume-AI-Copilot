@@ -719,14 +719,14 @@ const handleSubmitFeedback = async () => {
             <input
               type="text"
               placeholder="Search by title or company"
-              className="p-2 border rounded w-full"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
               value={jobSearchQuery}
               onChange={(e) => setJobSearchQuery(e.target.value)}
             />
             <input
               type="text"
               placeholder="Location"
-              className="p-2 border rounded w-full"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
               value={jobLocation}
               onChange={(e) => setJobLocation(e.target.value)}
             />
@@ -800,7 +800,7 @@ const handleSubmitFeedback = async () => {
               <div className="flex flex-col sm:flex-row gap-2 mt-2">
                 <textarea
                   placeholder="Optional: Write a custom cover letter..."
-                  className="w-full p-2 border rounded text-sm"
+                  className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
                   value={manualCoverLetters[job.id] || ""}
                   onChange={(e) =>
                     setManualCoverLetters((prev) => ({
@@ -858,7 +858,7 @@ const handleSubmitFeedback = async () => {
                   minMatchScore: parseInt(e.target.value) || 0
                 }))
               }
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
               min={0}
               max={100}
             />
@@ -875,7 +875,7 @@ const handleSubmitFeedback = async () => {
                   maxApplicationsPerDay: parseInt(e.target.value) || 0
                 }))
               }
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
             />
           </div>
 
@@ -890,7 +890,7 @@ const handleSubmitFeedback = async () => {
                   blacklistCompanies: e.target.value.split(',').map(c => c.trim())
                 }))
               }
-              className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+              className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
             />
           </div>
 
@@ -1196,7 +1196,7 @@ const handleSubmitFeedback = async () => {
                   type="file"
                   accept=".pdf"
                   onChange={(e) => setResumeFile(e.target.files[0])}
-                  className="w-full p-2 border rounded"
+                  className="bg-white dark:bg-gray-800 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-2"
                 />
                 <button
                   onClick={handleFileUpload}
@@ -1212,7 +1212,7 @@ const handleSubmitFeedback = async () => {
                   value={resume}
                   onChange={(e) => setResume(e.target.value)}
                   rows={6}
-                  className="w-full p-3 border rounded resize-y"
+                  className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
                   placeholder="Paste your resume here..."
                 />
               </div>
@@ -1287,7 +1287,7 @@ const handleSubmitFeedback = async () => {
               </label>
               <textarea
                 rows={field === 'name' || field === 'email' ? 1 : 3}
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
                 placeholder={`Enter your ${field}`}
                 value={formData[field]}
                 onChange={(e) =>
@@ -1337,7 +1337,7 @@ const handleSubmitFeedback = async () => {
               value={editableResume}
               onChange={(e) => setEditableResume(e.target.value)}
               rows={20}
-              className="w-full p-4 border rounded resize-y font-mono text-sm"
+              className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
             />
             <div className="flex gap-4 mt-4">
               <button
@@ -1371,7 +1371,7 @@ const handleSubmitFeedback = async () => {
                 value={resumeTag}
                 onChange={(e) => setResumeTag(e.target.value)}
                 placeholder="Enter tag for this version"
-                className="w-full p-2 border rounded dark:bg-gray-700 dark:text-white"
+                className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
                 />
                 <label className="flex items-center space-x-2 mt-2">
                   <input
@@ -1466,7 +1466,7 @@ const handleSubmitFeedback = async () => {
             value={resumeForATS}
             onChange={(e) => setResumeForATS(e.target.value)}
             rows={6}
-            className="w-full p-3 border rounded resize-y mb-4"
+            className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
             placeholder="Paste your resume..."
           />
 
@@ -1475,7 +1475,7 @@ const handleSubmitFeedback = async () => {
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             rows={6}
-            className="w-full p-3 border rounded resize-y mb-4"
+            className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
             placeholder="Paste the job description..."
           />
 
@@ -1580,7 +1580,7 @@ const handleSubmitFeedback = async () => {
             <label className="block font-medium">Paste Resume:</label>
             <textarea
               rows={10}
-              className="w-full p-3 border rounded"
+              className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
               value={matchResume}
               onChange={(e) => setMatchResume(e.target.value)}
               placeholder="Paste your resume here"
@@ -1589,7 +1589,7 @@ const handleSubmitFeedback = async () => {
             <label className="block font-medium mt-4">Paste Job Description:</label>
             <textarea
               rows={10}
-              className="w-full p-3 border rounded"
+              className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
               value={matchJob}
               onChange={(e) => setMatchJob(e.target.value)}
               placeholder="Paste job description here"
@@ -1651,7 +1651,7 @@ const handleSubmitFeedback = async () => {
                 value={resumeForATS}
                 onChange={(e) => setResumeForATS(e.target.value)}
                 rows={6}
-                className="w-full p-3 border rounded resize-y"
+                className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
                 placeholder="Paste your resume here..."
               />
             </div>
@@ -1662,7 +1662,7 @@ const handleSubmitFeedback = async () => {
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 rows={6}
-                className="w-full p-3 border rounded resize-y"
+                className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
                 placeholder="Paste the job description..."
               />
             </div>
@@ -1682,7 +1682,7 @@ const handleSubmitFeedback = async () => {
                 value={editableResume}
                 onChange={(e) => setEditableResume(e.target.value)}
                 rows={20}
-                className="w-full p-4 border rounded resize-y font-mono text-sm"
+                className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
               />
             </div>
           )}
@@ -1695,14 +1695,14 @@ const handleSubmitFeedback = async () => {
           <input
             type="text"
             placeholder="Your name (optional)"
-            className="w-full p-2 border rounded"
+            className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
             value={feedbackName}
             onChange={(e) => setFeedbackName(e.target.value)}
           />
           <input
             type="email"
             placeholder="Your email (optional)"
-            className="w-full p-2 border rounded"
+            className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
             value={feedbackEmail}
             onChange={(e) => setFeedbackEmail(e.target.value)}
           />
@@ -1718,7 +1718,7 @@ const handleSubmitFeedback = async () => {
           </select>
           <textarea
             placeholder="Your message"
-            className="w-full p-3 border rounded resize-y"
+            className="p-2 border rounded w-full bg-white dark:bg-gray-800 text-black dark:text-white"
             rows={5}
             value={feedbackMessage}
             onChange={(e) => setFeedbackMessage(e.target.value)}
@@ -1747,7 +1747,7 @@ const handleSubmitFeedback = async () => {
             <label className="block font-medium mb-1">Password:</label>
             <input
               type="password"
-              className="w-full p-2 border rounded"
+              className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
             />
@@ -1766,7 +1766,7 @@ const handleSubmitFeedback = async () => {
               <label className="block font-medium mb-1">Email:</label>
               <input
                 type="email"
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
                 value={registerEmail}
                 onChange={(e) => setRegisterEmail(e.target.value)}
               />
@@ -1775,7 +1775,7 @@ const handleSubmitFeedback = async () => {
               <label className="block font-medium mb-1">Password:</label>
               <input
                 type="password"
-                className="w-full p-2 border rounded"
+                className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
                 value={registerPassword}
                 onChange={(e) => setRegisterPassword(e.target.value)}
               />
