@@ -647,7 +647,7 @@ const handleSubmitFeedback = async () => {
  return (
   <div className={darkMode ? 'dark' : ''}>
     <Toaster position="top-right" />
-    <div className="bg-white dark:bg-gray-900 text-black dark:text-white transition-colors">
+    <div className="bg-white dark:bg-gray-900 text-black dark:text-white transition-colors min-h-screen">
       <div className="max-w-3xl mx-auto px-4 pt-16">
         {userId && userEmail && (
           <>
