@@ -8,7 +8,7 @@ from flask import request, jsonify
 from datetime import datetime , timezone
 from pymongo import UpdateOne
 import os
-client = MongoClient(os.environ.get("MONGO_URI"))
+client = MongoClient("mongodb+srv://JohnDoe:<db_password>@resume-builder.kptd13c.mongodb.net/?retryWrites=true&w=majority&appName=Resume-builder")
 db = client['resumeAI']  
 users_collection = db['users']
 resumes_collection = db['resumes']
