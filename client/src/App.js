@@ -80,6 +80,7 @@ function App() {
   );
   const [expandedJobs, setExpandedJobs] = useState({});
   const [expandedJobIds, setExpandedJobIds] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
   useEffect(() => {
       localStorage.setItem("darkMode", darkMode);
     }, [darkMode]);
@@ -660,6 +661,7 @@ const handleSubmitFeedback = async () => {
                   setUserId("");
                   setUserEmail("");
                   setActiveTab("login");
+                  setActiveCategory(null);
                 }}
               >
                 Logout
@@ -671,48 +673,69 @@ const handleSubmitFeedback = async () => {
           </>
         )}
 
-        {activeTab !== 'home' && (
+        {!userId && activeTab !== 'home' && (
           <div className="flex flex-wrap gap-4 justify-center mb-6">
-            {activeTab !== 'login' && !userId && (
-              <button
-                onClick={() => setActiveTab('login')}
-                className={`px-4 py-2 rounded font-semibold transition text-xs ${
-                  activeTab === 'login'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-200 text-black dark:text-black'
-                }`}
-              >
-                Login
-              </button>
-            )}
-            <div className="flex flex-col items-center">
-              <span className="font-semibold mb-1">Resume</span>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <button onClick={() => setActiveTab('analyze')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'analyze' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Analyze</button>
-                <button onClick={() => setActiveTab('generate')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'generate' ? 'bg-green-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Generate</button>
-                <button onClick={() => setActiveTab('ats')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'ats' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>ATS Score</button>
-                <button onClick={() => setActiveTab('saved')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'saved' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Resumes</button>
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold mb-1">Jobs</span>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <button onClick={() => setActiveTab('jobs')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'jobs' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Search</button>
-                <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Applications</button>
-                <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Auto-Apply</button>
-                <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Match</button>
-              </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="font-semibold mb-1">Other</span>
-              <button onClick={() => setActiveTab('feedback')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'feedback' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Feedback</button>
-            </div>
-            <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
-              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            <button
+              onClick={() => setActiveTab('login')}
+              className="px-4 py-2 rounded font-semibold transition bg-gray-200 text-black dark:text-black text-xs"
+            >
+              Login
             </button>
           </div>
         )}
+
+        {userId && activeTab !== 'home' && (
+          <div className="flex flex-wrap gap-4 justify-center mb-6">
+            <button
+              onClick={() => setActiveCategory('resume')}
+              className={`px-4 py-2 rounded font-semibold transition ${
+                activeCategory === 'resume' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:text-black'
+              }`}
+            >
+              Resume
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('jobs')}
+              className={`px-4 py-2 rounded font-semibold transition ${
+                activeCategory === 'jobs' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'
+              }`}
+            >
+              Job Match
+            </button>
+
+            <button
+              onClick={() => setActiveCategory('feedback')}
+              className={`px-4 py-2 rounded font-semibold transition ${
+                activeCategory === 'feedback' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'
+              }`}
+            >
+              Feedback
+            </button>
+          </div>
+        )}
+        {userId && activeCategory === 'resume' && (
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            <button onClick={() => setActiveTab('analyze')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'analyze' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Analyze</button>
+            <button onClick={() => setActiveTab('generate')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'generate' ? 'bg-green-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Generate</button>
+            <button onClick={() => setActiveTab('ats')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'ats' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>ATS Score</button>
+            <button onClick={() => setActiveTab('saved')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'saved' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Resumes</button>
+          </div>
+        )}
+        {userId && activeCategory === 'jobs' && (
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            <button onClick={() => setActiveTab('jobsearch')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'jobsearch' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Search</button>
+            <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Applications</button>
+            <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Auto-Apply</button>
+            <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Match</button>
+          </div>
+        )}
+
+        <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
+          {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
       </div>
+      
       {activeTab === 'jobs' && (
         <div className=" w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-4">Job Search</h2>
@@ -915,7 +938,13 @@ const handleSubmitFeedback = async () => {
             Instantly create tailored, ATS-optimized resumes with the power of AI.
           </p>
           <button
-            onClick={() => setActiveTab('login')}
+            onClick={() => {
+              if (userId && userEmail) {
+                setActiveTab('resume');
+              } else {
+                setActiveTab('login');
+              }
+            }}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded"
           >
             Get Started
