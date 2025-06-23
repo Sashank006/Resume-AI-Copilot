@@ -673,17 +673,6 @@ const handleSubmitFeedback = async () => {
           </>
         )}
 
-        {!userId && activeTab !== 'home' && (
-          <div className="flex flex-wrap gap-4 justify-center mb-6">
-            <button
-              onClick={() => setActiveTab('login')}
-              className="px-4 py-2 rounded font-semibold transition bg-gray-200 text-black dark:text-black text-xs"
-            >
-              Login
-            </button>
-          </div>
-        )}
-
         {userId && activeTab !== 'home' && (
           <div className="flex flex-wrap gap-4 justify-center mb-6">
             <button
@@ -735,7 +724,7 @@ const handleSubmitFeedback = async () => {
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </div>
-      
+
       {activeTab === 'jobs' && (
         <div className=" w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-4">Job Search</h2>
