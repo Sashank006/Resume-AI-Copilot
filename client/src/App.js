@@ -698,7 +698,8 @@ const handleSubmitFeedback = async () => {
           </button>
 
           <button
-            onClick={() => setActiveCategory('feedback')}
+            onClick={() => {setActiveCategory('feedback');
+              setActiveTab('feedback');}}
             className={`px-4 py-2 rounded font-semibold transition ${
               activeCategory === 'feedback'
                 ? 'bg-purple-600 text-white'
@@ -723,20 +724,6 @@ const handleSubmitFeedback = async () => {
           <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>My Applications</button>
           <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Auto-Apply</button>
           <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Match</button>
-          </div>
-        )}
-        {userId && activeCategory === 'feedback' && (
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
-            <button
-              onClick={() => setActiveTab('feedback-info')}
-              className={`px-4 py-2 rounded font-semibold transition ${
-                activeTab === 'feedback-info'
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
-              }`}
-            >
-              Feedback Overview
-            </button>
           </div>
         )}
         <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
@@ -1746,7 +1733,7 @@ const handleSubmitFeedback = async () => {
             onChange={(e) => setFeedbackEmail(e.target.value)}
           />
           <select
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded bg-white dark:bg-gray-800 text-black dark:text-white dark:border-gray-600"
             value={feedbackCategory}
             onChange={(e) => setFeedbackCategory(e.target.value)}
           >
