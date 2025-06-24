@@ -675,51 +675,56 @@ const handleSubmitFeedback = async () => {
 
         {userId && activeTab !== 'home' && (
           <div className="flex flex-wrap gap-4 justify-center mb-6">
-            <button
+           <button
               onClick={() => setActiveCategory('resume')}
               className={`px-4 py-2 rounded font-semibold transition ${
-                activeCategory === 'resume' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:text-black'
+                activeCategory === 'resume'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
               }`}
             >
               Resume
             </button>
 
-            <button
-              onClick={() => setActiveCategory('jobs')}
-              className={`px-4 py-2 rounded font-semibold transition ${
-                activeCategory === 'jobs' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'
-              }`}
-            >
-              Job Match
-            </button>
+           <button
+            onClick={() => setActiveCategory('jobs')}
+            className={`px-4 py-2 rounded font-semibold transition ${
+              activeCategory === 'jobs'
+                ? 'bg-pink-600 text-white'
+                : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            Job Match
+          </button>
 
-            <button
-              onClick={() => setActiveCategory('feedback')}
-              className={`px-4 py-2 rounded font-semibold transition ${
-                activeCategory === 'feedback' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'
-              }`}
-            >
-              Feedback
-            </button>
+          <button
+            onClick={() => setActiveCategory('feedback')}
+            className={`px-4 py-2 rounded font-semibold transition ${
+              activeCategory === 'feedback'
+                ? 'bg-purple-600 text-white'
+                : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+            }`}
+          >
+            Feedback
+          </button>
           </div>
         )}
         {userId && activeCategory === 'resume' && (
           <div className="flex flex-wrap gap-2 justify-center mb-6">
-            <button onClick={() => setActiveTab('analyze')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'analyze' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Analyze</button>
-            <button onClick={() => setActiveTab('generate')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'generate' ? 'bg-green-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Generate</button>
-            <button onClick={() => setActiveTab('ats')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'ats' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>ATS Score</button>
-            <button onClick={() => setActiveTab('saved')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'saved' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Resumes</button>
+           <button onClick={() => setActiveTab('analyze')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'analyze' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Analyze</button>
+            <button onClick={() => setActiveTab('generate')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'generate' ? 'bg-green-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Generate</button>
+            <button onClick={() => setActiveTab('ats')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'ats' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>ATS Score</button>
+            <button onClick={() => setActiveTab('saved')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'saved' ? 'bg-yellow-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>My Resumes</button>
           </div>
         )}
         {userId && activeCategory === 'jobs' && (
           <div className="flex flex-wrap gap-2 justify-center mb-6">
-            <button onClick={() => setActiveTab('jobsearch')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'jobsearch' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Search</button>
-            <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>My Applications</button>
-            <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Auto-Apply</button>
-            <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:text-black'}`}>Job Match</button>
+          <button onClick={() => setActiveTab('jobsearch')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'jobsearch' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Search</button>
+          <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>My Applications</button>
+          <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Auto-Apply</button>
+          <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Match</button>
           </div>
         )}
-
         <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
@@ -1242,7 +1247,7 @@ const handleSubmitFeedback = async () => {
                 <select
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded bg-white text-black dark:bg-gray-800 dark:text-white"
                 >
                   <option>SWE Intern</option>
                   <option>Data Analyst</option>
