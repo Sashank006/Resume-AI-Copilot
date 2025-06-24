@@ -725,12 +725,26 @@ const handleSubmitFeedback = async () => {
           <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Match</button>
           </div>
         )}
+        {userId && activeCategory === 'feedback' && (
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            <button
+              onClick={() => setActiveTab('feedback-info')}
+              className={`px-4 py-2 rounded font-semibold transition ${
+                activeTab === 'feedback-info'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Feedback Overview
+            </button>
+          </div>
+        )}
         <button onClick={() => setDarkMode(!darkMode)} className="absolute top-4 right-4 p-2">
           {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
         </button>
       </div>
 
-      {activeTab === 'jobs' && (
+      {activeCategory === 'jobs' && activeTab === 'jobsearch' && (
         <div className=" w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-2xl font-bold mb-4">Job Search</h2>
 
