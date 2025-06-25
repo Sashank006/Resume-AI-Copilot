@@ -1768,7 +1768,7 @@ const handleSubmitFeedback = async () => {
       )}
 
       {activeTab === 'login' && !userId &&(
-        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8">
+         <div className="flex justify-start min-h-screen px-6 py-12">
           <div className="w-full max-w-md space-y-4">
             <div className="space-y-4">
               <div>
