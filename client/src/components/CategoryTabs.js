@@ -23,7 +23,7 @@ const CategoryTabs = () => {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8 text-center bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-md">
+    <div className="w-full max-w-5xl mx-auto px-4 py-8 text-center">
       {/* Top-Level Tabs */}
       <div className="flex flex-wrap justify-center gap-4 mb-6">
         {Object.entries(categories).map(([key, val]) => (
