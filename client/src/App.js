@@ -81,6 +81,9 @@ function App() {
   const [expandedJobs, setExpandedJobs] = useState({});
   const [expandedJobIds, setExpandedJobIds] = useState([]);
   const [activeCategory, setActiveCategory] = useState(null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
   useEffect(() => {
       localStorage.setItem("darkMode", darkMode);
     }, [darkMode]);
@@ -312,6 +315,7 @@ function App() {
     };
 
   const handleRegister = async () => {
+    setIsRegistering(true);
     try {
       const res = await fetch("http://localhost:5000/register", {
         method: "POST",
@@ -322,19 +326,23 @@ function App() {
       const data = await res.json();
 
       if (res.ok) {
-        setRegisterMessage("Registration successful! You can now log in.");
+        toast.success("Registration successful! You can now log in.");
         setRegisterEmail('');
         setRegisterPassword('');
       } else {
-        setRegisterMessage(data.error || "Registration failed.");
+        toast.error(data.error || "Registration failed.");
       }
     } catch (err) {
       console.error("Registration error:", err);
-      setRegisterMessage("Something went wrong.");
+      toast.error("Something went wrong.");
+    } finally {
+      setIsRegistering(false);
     }
   };
 
+
   const handleLogin = async () => {
+    setIsLoggingIn(true);
     try {
       const res = await fetch("http://localhost:5000/login", {
         method: "POST",
@@ -345,22 +353,23 @@ function App() {
       const data = await res.json();
 
       if (res.ok) {
+        toast.success("Login successful!");
         setUserId(data.userId);
         setUserEmail(data.email);
         localStorage.setItem("userId", data.userId);
         localStorage.setItem("userEmail", data.email);
-        setLoginMessage("Login successful!");
         setActiveTab("home");
-      }
-
-      else {
-        setLoginMessage(data.error || "Login failed.");
+      } else {
+        toast.error(data.error || "Login failed.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      setLoginMessage("Something went wrong.");
+      toast.error("Something went wrong.");
+    } finally {
+      setIsLoggingIn(false);
     }
-};
+  };
+
 
   const handleDownloadPDF = () => {
   if (!generatedRef.current) return;
@@ -1780,9 +1789,10 @@ const handleSubmitFeedback = async () => {
           </div>
           <button
             onClick={handleLogin}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold px-4 py-2 rounded"
+            disabled={isLoggingIn}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
           >
-            Login
+            {isLoggingIn ? "Logging in..." : "Login"}
           </button>
           {loginMessage && <p className="text-sm text-gray-600 mt-2">{loginMessage}</p>}
           <hr className="my-6" />
@@ -1808,9 +1818,10 @@ const handleSubmitFeedback = async () => {
             </div>
             <button
               onClick={handleRegister}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded"
+              disabled={isRegistering}
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
             >
-              Register
+              {isRegistering ? "Registering..." : "Register"}
             </button>
             {registerMessage && (
               <p className="text-sm text-gray-600 mt-2">{registerMessage}</p>
