@@ -729,9 +729,9 @@ const handleSubmitFeedback = async () => {
         )}
         {userId && activeCategory === 'jobs' && (
           <div className="flex flex-wrap gap-2 justify-center mb-6">
-          <button onClick={() => setActiveTab('jobsearch')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'jobsearch' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Search</button>
-          <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>My Applications</button>
-          <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition text-xs ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Auto-Apply</button>
+          <button onClick={() => setActiveTab('jobsearch')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'jobsearch' ? 'bg-indigo-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Search</button>
+          <button onClick={() => setActiveTab('applications')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'applications' ? 'bg-emerald-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>My Applications</button>
+          <button onClick={() => setActiveTab('auto-apply')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'auto-apply' ? 'bg-orange-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Auto-Apply</button>
           <button onClick={() => setActiveTab('match')} className={`px-4 py-2 rounded font-semibold transition ${activeTab === 'match' ? 'bg-pink-600 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-600'}`}>Job Match</button>
           </div>
         )}
@@ -1768,64 +1768,68 @@ const handleSubmitFeedback = async () => {
       )}
 
       {activeTab === 'login' && !userId &&(
-        <div className="space-y-4">
-          <div>
-            <label className="block font-medium mb-1">Email:</label>
-            <input
-              type="email"
-              className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
-              value={loginEmail}
-              onChange={(e) => setLoginEmail(e.target.value)}
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Password:</label>
-            <input
-              type="password"
-              className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
-            />
-          </div>
-          <button
-            onClick={handleLogin}
-            disabled={isLoggingIn}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
-          >
-            {isLoggingIn ? "Logging in..." : "Login"}
-          </button>
-          {loginMessage && <p className="text-sm text-gray-600 mt-2">{loginMessage}</p>}
-          <hr className="my-6" />
-          <h2 className="text-lg font-semibold mb-2">Register</h2>
-          <div className="space-y-4">
-            <div>
-              <label className="block font-medium mb-1">Email:</label>
-              <input
-                type="email"
-                className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                value={registerEmail}
-                onChange={(e) => setRegisterEmail(e.target.value)}
-              />
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-8">
+          <div className="w-full max-w-md space-y-4">
+            <div className="space-y-4">
+              <div>
+                <label className="block font-medium mb-1">Email:</label>
+                <input
+                  type="email"
+                  className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="block font-medium mb-1">Password:</label>
+                <input
+                  type="password"
+                  className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+              </div>
+              <button
+                onClick={handleLogin}
+                disabled={isLoggingIn}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+              >
+                {isLoggingIn ? "Logging in..." : "Login"}
+              </button>
+              {loginMessage && <p className="text-sm text-gray-600 mt-2">{loginMessage}</p>}
+              <hr className="my-6" />
+              <h2 className="text-lg font-semibold mb-2">Register</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block font-medium mb-1">Email:</label>
+                  <input
+                    type="email"
+                    className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                    value={registerEmail}
+                    onChange={(e) => setRegisterEmail(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="block font-medium mb-1">Password:</label>
+                  <input
+                    type="password"
+                    className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                  />
+                </div>
+                <button
+                  onClick={handleRegister}
+                  disabled={isRegistering}
+                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {isRegistering ? "Registering..." : "Register"}
+                </button>
+                {registerMessage && (
+                  <p className="text-sm text-gray-600 mt-2">{registerMessage}</p>
+                )}
+              </div>
             </div>
-            <div>
-              <label className="block font-medium mb-1">Password:</label>
-              <input
-                type="password"
-                className="p-2 border rounded w-full bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600"
-                value={registerPassword}
-                onChange={(e) => setRegisterPassword(e.target.value)}
-              />
-            </div>
-            <button
-              onClick={handleRegister}
-              disabled={isRegistering}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isRegistering ? "Registering..." : "Register"}
-            </button>
-            {registerMessage && (
-              <p className="text-sm text-gray-600 mt-2">{registerMessage}</p>
-            )}
           </div>
         </div>
       )}
