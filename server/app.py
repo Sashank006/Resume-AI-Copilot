@@ -8,8 +8,6 @@ from flask import request, jsonify
 from datetime import datetime , timezone
 from pymongo import UpdateOne
 import os
-from dotenv import load_dotenv
-load_dotenv()
 client = MongoClient(os.environ.get("MONGO_URI"))
 db = client['resumeAI']  
 users_collection = db['users']
