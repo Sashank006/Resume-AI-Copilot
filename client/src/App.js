@@ -127,7 +127,7 @@ function App() {
         const scoredJobs = await Promise.all(
           rawJobs.map(async (job) => {
             try {
-              const atsRes = await fetch("https://resume-ai-copilot.onrender.com/api/ats-score", {
+              const atsRes = await fetch("https://resume-ai-copilot.onrender.com/ats-score", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -214,7 +214,7 @@ function App() {
 
       setApplicationStatus(prev => ({ ...prev, [job.id]: 'applied' }));
       setAppliedJobs(prev => [...prev, appliedJob]);
-      await fetch("https://resume-ai-copilot.onrender.com/api/save-applied-job", {
+      await fetch("https://resume-ai-copilot.onrender.com/save-applied-job", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -235,7 +235,7 @@ function App() {
   useEffect(() => {
     const fetchApplied = async () => {
       try {
-        const res = await fetch(`https://resume-ai-copilot.onrender.com/api/applied-jobs/${userId}`);
+        const res = await fetch(`https://resume-ai-copilot.onrender.com/applied-jobs/${userId}`);
         const data = await res.json();
         setAppliedJobs(data.appliedJobs); // backend returns { appliedJobs: [...] }
       } catch (error) {
@@ -263,7 +263,7 @@ function App() {
       }
       if (activeTab === 'applications') {
         try {
-          const res = await fetch(`https://resume-ai-copilot.onrender.com/api/get-applied-jobs?userId=${userId}`);
+          const res = await fetch(`https://resume-ai-copilot.onrender.com/get-applied-jobs?userId=${userId}`);
           const data = await res.json();
           setAppliedJobs(data.jobs || []);
         } catch (err) {
@@ -297,7 +297,7 @@ function App() {
       }
 
       try {
-        const res = await fetch("https://resume-ai-copilot.onrender.com/api/ats-score", {
+        const res = await fetch("https://resume-ai-copilot.onrender.com/ats-score", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -317,7 +317,7 @@ function App() {
   const handleRegister = async () => {
     setIsRegistering(true);
     try {
-      const res = await fetch("https://resume-ai-copilot.onrender.com/api/register", {
+      const res = await fetch("https://resume-ai-copilot.onrender.com/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registerEmail, password: registerPassword })
@@ -344,7 +344,7 @@ function App() {
   const handleLogin = async () => {
     setIsLoggingIn(true);
     try {
-      const res = await fetch("https://resume-ai-copilot.onrender.com/api/login", {
+      const res = await fetch("https://resume-ai-copilot.onrender.com/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: loginEmail, password: loginPassword })
@@ -391,7 +391,7 @@ function App() {
   formData.append("file", resumeFile);
 
   try {
-    const res = await fetch("https://resume-ai-copilot.onrender.com/api/upload", {
+    const res = await fetch("https://resume-ai-copilot.onrender.com/upload", {
       method: "POST",
       body: formData
     });
@@ -426,7 +426,7 @@ function App() {
   const handleAnalyze = async () => {
     if (!resume.trim()) return;
     try {
-      const res = await fetch("https://resume-ai-copilot.onrender.com/api/analyze", {
+      const res = await fetch("https://resume-ai-copilot.onrender.com/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ resume })
@@ -448,7 +448,7 @@ function App() {
         toast.error("Please fill out at least one field before generating.");
         return;
       }
-      const res = await fetch("https://resume-ai-copilot.onrender.com/api/generate", {
+      const res = await fetch("https://resume-ai-copilot.onrender.com/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, role })
@@ -461,7 +461,7 @@ function App() {
   };
   const handleExtractFields = async (text) => {
   try {
-    const res = await fetch("https://resume-ai-copilot.onrender.com/api/extract-fields", {
+    const res = await fetch("https://resume-ai-copilot.onrender.com/extract-fields", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ resume: text })
@@ -492,7 +492,7 @@ function App() {
     return;
   }
   try {
-    const res = await fetch("https://resume-ai-copilot.onrender.com/api/rewrite-resume", {
+    const res = await fetch("https://resume-ai-copilot.onrender.com/rewrite-resume", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -519,7 +519,7 @@ function App() {
       if (activeTab === 'saved') {
         setLoadingSaved(true);
         try {
-          const res = await fetch(`https://resume-ai-copilot.onrender.com/api/resumes/${userId}`);
+          const res = await fetch(`https://resume-ai-copilot.onrender.com/resumes/${userId}`);
           const data = await res.json();
           setSavedResumes(data.resumes);
         } catch (err) {
@@ -556,7 +556,7 @@ function App() {
 };
 const handleDelete = async (resumeId) => {
   try {
-    const res = await fetch(`https://resume-ai-copilot.onrender.com/api/resume/${resumeId}`, {
+    const res = await fetch(`https://resume-ai-copilot.onrender.com/resume/${resumeId}`, {
       method: "DELETE",
     });
 
@@ -627,7 +627,7 @@ const handleSubmitFeedback = async () => {
   }
 
   try {
-    const res = await fetch("https://resume-ai-copilot.onrender.com/api/submit-feedback", {
+    const res = await fetch("https://resume-ai-copilot.onrender.com/submit-feedback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1186,7 +1186,7 @@ const handleSubmitFeedback = async () => {
                   <button
                     onClick={async () => {
                       try {
-                        const res = await fetch("https://resume-ai-copilot.onrender.com/api/rename-tag", {
+                        const res = await fetch("https://resume-ai-copilot.onrender.com/rename-tag", {
                           method: "POST",
                           headers: { "Content-Type": "application/json" },
                           body: JSON.stringify({
@@ -1200,7 +1200,7 @@ const handleSubmitFeedback = async () => {
                         const data = await res.json();
                         toast.success(data.message || "Tag updated!");
                         // Refresh saved resumes
-                        const refreshed = await fetch(`https://resume-ai-copilot.onrender.com/api/resumes/${userId}`);
+                        const refreshed = await fetch(`https://resume-ai-copilot.onrender.com/resumes/${userId}`);
                         const updated = await refreshed.json();
                         setSavedResumes(updated.resumes);
 
@@ -1425,7 +1425,7 @@ const handleSubmitFeedback = async () => {
                     }
 
                     try {
-                      const checkRes = await fetch(`https://resume-ai-copilot.onrender.com/api/check-tag`, {
+                      const checkRes = await fetch(`https://resume-ai-copilot.onrender.com/check-tag`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ userId, tag: resumeTag })
@@ -1437,7 +1437,7 @@ const handleSubmitFeedback = async () => {
                           toast.error("This tag already exists, please check the box to overwrite");
                           return;
                         }
-                      const res = await fetch("https://resume-ai-copilot.onrender.com/api/save-resume", {
+                      const res = await fetch("https://resume-ai-copilot.onrender.com/save-resume", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -1518,7 +1518,7 @@ const handleSubmitFeedback = async () => {
            onClick={async () => {
             setLoadingATS(true);
             try {
-              const res = await fetch("https://resume-ai-copilot.onrender.com/api/ats-score", {
+              const res = await fetch("https://resume-ai-copilot.onrender.com/ats-score", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
