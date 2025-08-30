@@ -101,10 +101,13 @@ def get_resumes(user_id):
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    data = request.get_json()
-    resume_text = data.get("resume", "")
-    
     try:
+        data = request.get_json()
+        resume_text = data.get("resume", "")
+         
+        print(f"API Key exists: {bool(os.getenv('OPENAI_API_KEY'))}")
+        print(f"Resume text length: {len(resume_text)}")
+        
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo", 
             messages=[
