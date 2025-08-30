@@ -133,6 +133,18 @@ def health():
         "openai_key_present": bool(os.getenv('OPENAI_API_KEY'))
     })
 
+@app.route('/test-openai', methods=['GET'])
+def test_openai():
+    try:
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": "Say hello"}],
+            max_tokens=10
+        )
+        return jsonify({"success": True, "response": response.choices[0].message.content})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+    
 @app.route('/generate', methods=['POST'])
 def generate_resume():
     data = request.get_json()
