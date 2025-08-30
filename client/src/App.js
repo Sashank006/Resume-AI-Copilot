@@ -322,9 +322,7 @@ function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: registerEmail, password: registerPassword })
       });
-
       const data = await res.json();
-
       if (res.ok) {
         toast.success("Registration successful! You can now log in.");
         setRegisterEmail('');
