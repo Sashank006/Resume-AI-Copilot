@@ -107,7 +107,7 @@ def analyze():
          
         print(f"API Key exists: {bool(os.getenv('OPENAI_API_KEY'))}")
         print(f"Resume text length: {len(resume_text)}")
-        
+
         response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo", 
             messages=[
@@ -122,8 +122,8 @@ def analyze():
         return jsonify({"feedback": feedback})
         
     except Exception as e:
-        print("OpenAI error:", e)
-        return jsonify({"feedback": "Error generating feedback from OpenAI."}), 500
+        print(f"Full error details: {type(e).__name__}: {str(e)}")
+        return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
 
 @app.route('/generate', methods=['POST'])
 def generate_resume():
