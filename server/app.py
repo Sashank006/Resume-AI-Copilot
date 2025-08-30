@@ -124,6 +124,14 @@ def analyze():
     except Exception as e:
         print(f"Full error details: {type(e).__name__}: {str(e)}")
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
+    
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({
+        "status": "healthy", 
+        "timestamp": datetime.now().isoformat(),
+        "openai_key_present": bool(os.getenv('OPENAI_API_KEY'))
+    })
 
 @app.route('/generate', methods=['POST'])
 def generate_resume():
