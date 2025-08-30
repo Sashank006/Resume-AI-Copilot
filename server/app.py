@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from openai import OpenAI
 import requests
 from pymongo import MongoClient
 from datetime import datetime
@@ -9,19 +8,82 @@ from flask import request, jsonify
 from datetime import datetime , timezone
 from pymongo import UpdateOne
 import os
+import json
+import time
+
+# MongoDB setup
 mongo_client = MongoClient(os.environ.get("MONGO_URI"))
-openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 db = mongo_client['resumeAI']  
 users_collection = db['users']
 resumes_collection = db['resumes']
 applied_jobs_collection = db['applied_jobs']
 feedback_collection = db['feedback']
+
 app = Flask(__name__)
 CORS(app)
+
 from bson.objectid import ObjectId
 from flask import send_file
 import PyPDF2
 import io
+
+# Hugging Face API configuration
+HF_API_TOKEN = os.getenv('HUGGINGFACE_API_KEY')
+HF_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+
+def call_huggingface_api(prompt, max_retries=3, retry_delay=2):
+    """
+    Call Hugging Face API with retry logic for model loading
+    """
+    headers = {
+        "Authorization": f"Bearer {HF_API_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    
+    payload = {
+        "inputs": prompt,
+        "parameters": {
+            "max_length": 1000,
+            "temperature": 0.7,
+            "do_sample": True,
+            "top_p": 0.9
+        }
+    }
+    
+    for attempt in range(max_retries):
+        try:
+            response = requests.post(HF_API_URL, headers=headers, json=payload, timeout=30)
+            
+            if response.status_code == 503:
+                # Model is loading, wait and retry
+                if attempt < max_retries - 1:
+                    time.sleep(retry_delay * (attempt + 1))
+                    continue
+                else:
+                    return "Service temporarily unavailable. Please try again in a moment."
+            
+            response.raise_for_status()
+            result = response.json()
+            
+            if isinstance(result, list) and len(result) > 0:
+                return result[0].get('generated_text', '').replace(prompt, '').strip()
+            elif isinstance(result, dict):
+                return result.get('generated_text', '').replace(prompt, '').strip()
+            else:
+                return "Unable to generate response."
+                
+        except requests.exceptions.Timeout:
+            if attempt < max_retries - 1:
+                time.sleep(retry_delay)
+                continue
+            return "Request timed out. Please try again."
+        except requests.exceptions.RequestException as e:
+            if attempt < max_retries - 1:
+                time.sleep(retry_delay)
+                continue
+            return f"Error: {str(e)}"
+    
+    return "Unable to generate response after multiple attempts."
 
 @app.route('/rewrite-resume', methods=['POST'])
 def rewrite_resume():
@@ -29,36 +91,16 @@ def rewrite_resume():
     resume = data.get("resume", "")
     job_description = data.get("job", "")
 
-    prompt = f"""
-You are a professional resume writer. Improve the following resume to better match the job description below.
+    prompt = f"""Rewrite this resume to match the job description. Focus on relevant skills and experience.
 
-Resume:
-{resume}
+Resume: {resume}
 
-Job Description:
-{job_description}
+Job: {job_description}
 
-Goals:
-- Tailor language to match the job
-- Emphasize relevant skills and responsibilities
-- Maintain clean formatting
-- Avoid copying the job description verbatim
-
-Rewrite and return only the revised resume:
-"""
+Improved resume:"""
 
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You specialize in optimizing resumes to match job descriptions."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=1000,
-            temperature=0.7
-        )
-
-        rewritten = response.choices[0].message.content
+        rewritten = call_huggingface_api(prompt)
         return jsonify({"rewritten": rewritten})
     except Exception as e:
         print("Rewrite error:", e)
@@ -86,15 +128,10 @@ def upload():
 @app.route('/resumes/<user_id>', methods=['GET'])
 def get_resumes(user_id):
     try:
-        
         resumes = list(resumes_collection.find({"userId": user_id}))
-        
-     
         for resume in resumes:
             resume['_id'] = str(resume['_id'])
-        
         return jsonify({"resumes": resumes}), 200
-
     except Exception as e:
         print("Resume fetch error:", e)
         return jsonify({"error": "Failed to retrieve resumes"}), 500
@@ -105,20 +142,22 @@ def analyze():
         data = request.get_json()
         resume_text = data.get("resume", "")
          
-        print(f"API Key exists: {bool(os.getenv('OPENAI_API_KEY'))}")
+        print(f"HF API Token exists: {bool(HF_API_TOKEN)}")
         print(f"Resume text length: {len(resume_text)}")
 
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo", 
-            messages=[
-                {"role": "system", "content": "You are an expert resume reviewer. Give bullet-point feedback."},
-                {"role": "user", "content": f"Review this resume and give 4–6 bullet points:\n\n{resume_text}"}
-            ],
-            max_tokens=500,  
-            temperature=0.7  
-        )
+        prompt = f"""Analyze this resume and provide 4-6 bullet points of feedback:
+
+{resume_text}
+
+Feedback:
+•"""
         
-        feedback = response.choices[0].message.content
+        feedback = call_huggingface_api(prompt)
+        
+        # Ensure feedback starts with bullet points
+        if not feedback.startswith('•'):
+            feedback = '• ' + feedback
+            
         return jsonify({"feedback": feedback})
         
     except Exception as e:
@@ -130,18 +169,14 @@ def health():
     return jsonify({
         "status": "healthy", 
         "timestamp": datetime.now().isoformat(),
-        "openai_key_present": bool(os.getenv('OPENAI_API_KEY'))
+        "hf_token_present": bool(HF_API_TOKEN)
     })
 
-@app.route('/test-openai', methods=['GET'])
-def test_openai():
+@app.route('/test-huggingface', methods=['GET'])
+def test_huggingface():
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": "Say hello"}],
-            max_tokens=10
-        )
-        return jsonify({"success": True, "response": response.choices[0].message.content})
+        test_response = call_huggingface_api("Hello, how are you?")
+        return jsonify({"success": True, "response": test_response})
     except Exception as e:
         return jsonify({"success": False, "error": str(e)})
     
@@ -158,45 +193,38 @@ def generate_resume():
     skills_first = data.get("skillsFirst", False)
     user_id = data.get("userId")
     role = data.get("role", "")
+    
     layout_order = (
-    f"Skills\n{skills}\n\nExperience\n{experience}"
-    if skills_first else
-    f"Experience\n{experience}\n\nSkills\n{skills}"
+        f"Skills: {skills}\nExperience: {experience}"
+        if skills_first else
+        f"Experience: {experience}\nSkills: {skills}"
     )
 
-    gpa_text = "Include GPA if mentioned in the education section." if include_gpa else "Do not mention GPA unless it's explicitly included."
+    gpa_instruction = "Include GPA if mentioned." if include_gpa else "Do not mention GPA."
 
-    prompt = f"""
-You are a professional resume writer. Generate a clean, ATS-friendly resume tailored for the role of {role}.
+    prompt = f"""Create a professional resume for {role} position:
 
 Name: {name}
 Email: {email}
-
-Education:
-{education}
-
-{gpa_text}
-
+Education: {education}
 {layout_order}
 
-Use professional language. Include these sections:
-- Summary (for a {role})
-- Education
-- {('Skills first' if skills_first else 'Experience first')} layout as specified
+{gpa_instruction}
+
+Professional resume:
+
+{name}
+{email}
+
+PROFESSIONAL SUMMARY
 """
 
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a professional resume writer."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=1000,
-            temperature=0.7
-        )
-
-        generated_resume = response.choices[0].message.content
+        generated_resume = call_huggingface_api(prompt)
+        
+        # Add the header info if the model didn't include it
+        if not generated_resume.startswith(name):
+            generated_resume = f"{name}\n{email}\n\nPROFESSIONAL SUMMARY\n{generated_resume}"
 
         if user_id:
             resumes_collection.insert_one({
@@ -221,32 +249,20 @@ def ats_score():
     resume = data.get("resume", "")
     job_description = data.get("job", "")
 
-    prompt = f"""
-Compare the following resume and job description. Provide:
+    prompt = f"""Compare this resume to the job description and provide ATS analysis:
 
-1. An ATS match score out of 100 based on keyword and role relevance.
-2. A list of at least 5 important keywords missing from the resume.
-3. 3–4 bullet point suggestions for improving this resume to better match the job.
+Resume: {resume}
 
---- Resume ---
-{resume}
+Job: {job_description}
 
---- Job Description ---
-{job_description}
-"""
+Analysis:
+ATS Score: /100
+Missing Keywords:
+Suggestions:
+•"""
 
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a hiring system that evaluates resumes based on ATS compatibility."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=800,
-            temperature=0.5
-        )
-
-        ats_feedback = response.choices[0].message.content
+        ats_feedback = call_huggingface_api(prompt)
         return jsonify({"result": ats_feedback})
     except Exception as e:
         print("ATS score error:", e)
@@ -302,41 +318,39 @@ def extract_fields():
     data = request.get_json()
     resume_text = data.get("resume", "")
 
-    prompt = f"""
-Extract the following information from this resume:
+    prompt = f"""Extract information from this resume in JSON format:
 
-1. Full Name
-2. Email Address
-3. Education details
-4. Work experience
-5. Skills
+{resume_text}
 
-Respond strictly in this JSON format:
+JSON:
 {{
-  "name": "...",
-  "email": "...",
-  "education": "...",
-  "experience": "...",
-  "skills": "..."
+  "name": "",
+  "email": "",
+  "education": "",
+  "experience": "",
+  "skills": ""
 }}
 
-Resume:
-{resume_text}
-"""
+Result:"""
 
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a resume parsing assistant. Always respond in valid JSON format."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=800,
-            temperature=0.3
-        )
+        extracted = call_huggingface_api(prompt)
         
-        extracted = response.choices[0].message.content
-        return jsonify({"fields": extracted})
+        # Try to parse as JSON, fallback to structured text if needed
+        try:
+            json.loads(extracted)
+            return jsonify({"fields": extracted})
+        except:
+            # If not valid JSON, create a structured response
+            fallback_json = {
+                "name": "Please extract manually",
+                "email": "Please extract manually", 
+                "education": "Please extract manually",
+                "experience": "Please extract manually",
+                "skills": "Please extract manually"
+            }
+            return jsonify({"fields": json.dumps(fallback_json)})
+            
     except Exception as e:
         print("Extraction error:", e)
         return jsonify({"error": "Failed to extract fields."}), 500
@@ -471,33 +485,24 @@ def generate_cover_letter():
     job_title = data.get("jobTitle", "")
     job_description = data.get("jobDescription", "")
 
-    prompt = f"""
-You are a professional career assistant. Write a personalized cover letter tailored to the job title and description below.
+    prompt = f"""Write a professional cover letter for this job application:
 
-Resume:
-{resume}
+Resume: {resume}
 
 Job Title: {job_title}
+Job Description: {job_description}
 
-Job Description:
-{job_description}
+Cover Letter:
 
-Write a compelling, professional cover letter starting with 'Dear Hiring Manager'. Highlight relevant strengths and show alignment with the job.
-Return only the final formatted cover letter.
-"""
+Dear Hiring Manager,"""
 
     try:
-        response = openai_client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a professional cover letter writer."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=1000,
-            temperature=0.7
-        )
+        letter = call_huggingface_api(prompt)
+        
+        # Ensure it starts properly
+        if not letter.startswith("Dear Hiring Manager"):
+            letter = "Dear Hiring Manager,\n\n" + letter
 
-        letter = response.choices[0].message.content
         return jsonify({"coverLetter": letter})
 
     except Exception as e:
