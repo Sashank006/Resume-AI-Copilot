@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from openai import OpenAI
 import requests
 from pymongo import MongoClient
 from datetime import datetime
@@ -8,14 +9,15 @@ from flask import request, jsonify
 from datetime import datetime , timezone
 from pymongo import UpdateOne
 import os
-client = MongoClient(os.environ.get("MONGO_URI"))
-db = client['resumeAI']  
+mongo_client = MongoClient(os.environ.get("MONGO_URI"))
+openai_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+db = mongo_client['resumeAI']  
 users_collection = db['users']
 resumes_collection = db['resumes']
 applied_jobs_collection = db['applied_jobs']
+feedback_collection = db['feedback']
 app = Flask(__name__)
 CORS(app)
-OLLAMA_URL = os.environ.get("OLLAMA_API_URL", "http://localhost:11434/api/chat")
 from bson.objectid import ObjectId
 from flask import send_file
 import PyPDF2
@@ -46,19 +48,17 @@ Rewrite and return only the revised resume:
 """
 
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-                "messages": [
-                    {"role": "system", "content": "You specialize in optimizing resumes to match job descriptions."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You specialize in optimizing resumes to match job descriptions."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=1000,
+            temperature=0.7
         )
 
-        rewritten = response.json()['message']['content']
+        rewritten = response.choices[0].message.content
         return jsonify({"rewritten": rewritten})
     except Exception as e:
         print("Rewrite error:", e)
@@ -83,14 +83,13 @@ def upload():
         print("PDF extraction error:", e)
         return jsonify({"error": "Failed to extract text"}), 500
 
-
 @app.route('/resumes/<user_id>', methods=['GET'])
 def get_resumes(user_id):
     try:
-        # Fetch all resumes linked to the userId
+        
         resumes = list(resumes_collection.find({"userId": user_id}))
         
-        # Format ObjectId and data for frontend
+     
         for resume in resumes:
             resume['_id'] = str(resume['_id'])
         
@@ -100,33 +99,29 @@ def get_resumes(user_id):
         print("Resume fetch error:", e)
         return jsonify({"error": "Failed to retrieve resumes"}), 500
 
-# ------------------ ANALYZE FEEDBACK ------------------
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.get_json()
     resume_text = data.get("resume", "")
     
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-
-                "messages": [
-                    {"role": "system", "content": "You are an expert resume reviewer. Give bullet-point feedback."},
-                    {"role": "user", "content": f"Review this resume and give 4–6 bullet points:\n\n{resume_text}"}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo", 
+            messages=[
+                {"role": "system", "content": "You are an expert resume reviewer. Give bullet-point feedback."},
+                {"role": "user", "content": f"Review this resume and give 4–6 bullet points:\n\n{resume_text}"}
+            ],
+            max_tokens=500,  
+            temperature=0.7  
         )
-        feedback = response.json()['message']['content']
+        
+        feedback = response.choices[0].message.content
         return jsonify({"feedback": feedback})
+        
     except Exception as e:
-        print("Ollama error:", e)
-        return jsonify({"feedback": "Error generating feedback from LLaMA 3."}), 500
+        print("OpenAI error:", e)
+        return jsonify({"feedback": "Error generating feedback from OpenAI."}), 500
 
-
-# ------------------ GENERATE FULL RESUME ------------------
 @app.route('/generate', methods=['POST'])
 def generate_resume():
     data = request.get_json()
@@ -146,11 +141,8 @@ def generate_resume():
     f"Experience\n{experience}\n\nSkills\n{skills}"
     )
 
-
     gpa_text = "Include GPA if mentioned in the education section." if include_gpa else "Do not mention GPA unless it's explicitly included."
 
-    
- 
     prompt = f"""
 You are a professional resume writer. Generate a clean, ATS-friendly resume tailored for the role of {role}.
 
@@ -170,23 +162,19 @@ Use professional language. Include these sections:
 - {('Skills first' if skills_first else 'Experience first')} layout as specified
 """
 
-
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-                "messages": [
-                    {"role": "system", "content": "You are a professional resume writer."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a professional resume writer."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=1000,
+            temperature=0.7
         )
 
-        generated_resume = response.json()['message']['content']
+        generated_resume = response.choices[0].message.content
 
-        # Save to DB
         if user_id:
             resumes_collection.insert_one({
                 "userId": user_id,
@@ -201,7 +189,7 @@ Use professional language. Include these sections:
         return jsonify({"generated": generated_resume})
 
     except Exception as e:
-        print("Ollama generation error:", e)
+        print("Resume generation error:", e)
         return jsonify({"generated": "Error generating resume."}), 500
 
 @app.route('/ats-score', methods=['POST'])
@@ -225,22 +213,20 @@ Compare the following resume and job description. Provide:
 """
 
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-                "messages": [
-                    {"role": "system", "content": "You are a hiring system that evaluates resumes based on ATS compatibility."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a hiring system that evaluates resumes based on ATS compatibility."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=800,
+            temperature=0.5
         )
 
-        ats_feedback = response.json()['message']['content']
+        ats_feedback = response.choices[0].message.content
         return jsonify({"result": ats_feedback})
     except Exception as e:
-        print("Ollama ATS error:", e)
+        print("ATS score error:", e)
         return jsonify({"result": "Error evaluating ATS score."}), 500
     
 @app.route('/test-db')
@@ -257,14 +243,11 @@ def register():
     email = data.get('email')
     password = data.get('password')
 
-    # Check if user already exists
     if users_collection.find_one({"email": email}):
         return jsonify({"error": "User already exists"}), 400
 
-    # Hash the password
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
-    # Save to DB
     users_collection.insert_one({
         "email": email,
         "password": hashed
@@ -319,18 +302,17 @@ Resume:
 """
 
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-                "messages": [
-                    {"role": "system", "content": "You are a resume parsing assistant."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a resume parsing assistant. Always respond in valid JSON format."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=800,
+            temperature=0.3
         )
-        extracted = response.json()['message']['content']
+        
+        extracted = response.choices[0].message.content
         return jsonify({"fields": extracted})
     except Exception as e:
         print("Extraction error:", e)
@@ -343,13 +325,12 @@ def save_resume():
     user_id = data.get("userId", "")
     name = data.get("name", "")
     email = data.get("email", "")
-    tag = data.get("tag", "")  # Get tag from frontend
+    tag = data.get("tag", "")  
 
     if not resume_text or not user_id or not tag:
         return jsonify({"error": "Missing required fields"}), 400
 
     try:
-        # Try to update if tag already exists for this user
         result = resumes_collection.update_one(
             {
                 "userId": user_id,
@@ -413,8 +394,6 @@ def rename_tag():
     )
 
     return jsonify({"message": "Tag renamed successfully"})
-
-feedback_collection = db['feedback']
 
 @app.route('/submit-feedback', methods=['POST'])
 def submit_feedback():
@@ -485,27 +464,22 @@ Return only the final formatted cover letter.
 """
 
     try:
-        response = requests.post(
-            OLLAMA_URL,
-            json={
-                "model": "mistral",
-                "messages": [
-                    {"role": "system", "content": "You are a professional cover letter writer."},
-                    {"role": "user", "content": prompt}
-                ],
-                "stream": False
-            }
+        response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a professional cover letter writer."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=1000,
+            temperature=0.7
         )
 
-        letter = response.json()['message']['content']
+        letter = response.choices[0].message.content
         return jsonify({"coverLetter": letter})
 
     except Exception as e:
         print("Cover letter generation error:", e)
         return jsonify({"coverLetter": "Error generating cover letter."}), 500
 
-
 if __name__ == "__main__":
    app.run(host="0.0.0.0", port=5000)
-
-
