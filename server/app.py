@@ -29,7 +29,7 @@ import io
 
 # Hugging Face API configuration
 HF_API_TOKEN = os.getenv('HUGGINGFACE_API_KEY')
-HF_API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium"
+HF_API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-base"
 
 def call_huggingface_api(prompt, max_retries=3, retry_delay=2):
     """
