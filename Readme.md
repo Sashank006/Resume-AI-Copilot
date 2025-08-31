@@ -69,6 +69,8 @@ Deploy backend via Render/Railway
 
 Use MongoDB Atlas (already done ✅)
 
+The AI backend is currently inactive because my free credits expired. The full code and architecture are implemented, and the system can be re-activated instantly with valid API tokens
+
 ## 🧠 Built by Sashank R.K.
 For Contact: [LinkedIn](https://www.linkedin.com/in/sashankreddyk) | [GitHub](https://github.com/Sashank006)
 
