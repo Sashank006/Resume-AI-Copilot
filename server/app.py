@@ -25,7 +25,7 @@ applied_jobs_collection = db['applied_jobs']
 feedback_collection = db['feedback']
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "https://resume-copilot-frontend.vercel.app"])
+CORS(app, resources={r"/*": {"origins": "*"}})
 from bson.objectid import ObjectId
 from flask import send_file
 import PyPDF2
