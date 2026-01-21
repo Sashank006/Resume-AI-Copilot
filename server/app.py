@@ -35,7 +35,7 @@ def call_groq_api(prompt):
     try:
         chat_completion = groq_client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
-            model="llama3-8b-8192",  # Fast, free model
+            model="llama-3.3-70b-versatile",  
             temperature=0.7,
             max_tokens=1024
         )
